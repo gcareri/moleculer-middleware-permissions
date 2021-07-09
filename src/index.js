@@ -5,7 +5,10 @@ const checkFunction = (current, requested) => {
   const missingPerms = Array.isArray(current) ? requested.filter(p => !current.includes(p)) : requested;
   if (missingPerms.length === 0) return true;
 
-  return `You don't have enough permissions in order to do that! Missing permissions: ${missingPerms.join(', ')}`;
+  return {
+    message: `You don't have enough permissions in order to do that! Missing permissions: ${missingPerms.join(', ')}`,
+    permissions: missingPerms
+  };
 };
 
 const getPermissionsFromAction = (action) => {
@@ -77,7 +80,7 @@ class PermissionGuard {
       }
 
       if (res !== true) {
-        throw new PermissionError('You have no right for this operation!', 'ERR_HAS_NO_ACCESS', { res });
+        throw new PermissionError('You have no right for this operation!', 'ERR_HAS_NO_ACCESS', res);
       }
     }
   }
